@@ -1,0 +1,48 @@
+[
+  {
+    "id": "添加app管理员_app_id正常_1",
+    "tag": "func",
+    "desc": "",
+    "database": "test",
+
+    "requests": [
+      {
+        "request": {
+          "url": "${testHost}/v1/auth/permission/apps",
+          "method": "POST",
+          "headers": {
+            "X-userId": 53541,
+            "tenantId": -1
+          },
+          "entity": "{\"name\": \"testapp1\"}"
+        },
+        "placeholder":[
+          "id:$.data.id"
+        ],
+        "assert": {
+          "statusCode": 200,
+          "check": {
+            "$.code": 0,
+            "$.message": "success",
+            "$.data.id":"${id}"
+          }
+        }
+      }
+    ],
+    "dbAsserts": [
+      {
+        "sql": "SELECT * FROM bi_mdbi_qa.auth_app WHERE name = 'testapp1';",
+        "body": {
+          "$.[0].name": "testapp1"
+        }
+      }
+    ],
+    "afterCase":{
+      "dbAsserts": [
+        {
+          "sql": "DELETE FROM bi_mdbi_qa.auth_app WHERE name = 'testapp1' ;"
+        }
+      ]
+    }
+  }
+]
